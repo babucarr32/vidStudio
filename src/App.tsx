@@ -36,6 +36,8 @@ const VolumeMuteIcon: React.FC<IconType> = ({ className, height, width }) => {
 function App() {
   return (
     <VidPlayer 
+      videoSrc="https://player.vimeo.com/external/194837908.sd.mp4?s=c350076905b78c67f74d7ee39fdb4fef01d12420&profile_id=164"
+      coverImage="https://fredrickjaxx.is/_assets/video/blossoms.jpg"
       // playInitialIcon={<VolumeMuteIcon width={40} height={40}/>}
       // pauseIcon={<VolumeMuteIcon width={40} height={40}/>}
       // volumeIcon={<VolumeMuteIcon width={40} height={40}/>}
