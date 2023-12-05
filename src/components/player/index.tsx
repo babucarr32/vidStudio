@@ -24,6 +24,8 @@ interface PlayerType {
   playForwardIcon?:  any;
   playIcon?:  any;
   pauseIcon?:  any;
+  coverImage?: string;
+  videoSrc: string;
 }
 
 const VidStudio: React.FC<PlayerType> = ({ 
@@ -33,7 +35,9 @@ const VidStudio: React.FC<PlayerType> = ({
   volumeMuteIcon, 
   playForwardIcon, 
   playInitialIcon, 
-  playIcon
+  playIcon,
+  videoSrc,
+  coverImage
 }) => {
   const player = useRef<HTMLDivElement | any>();
   // const playBtn = useRef<HTMLButtonElement | any>();
@@ -371,8 +375,8 @@ const VidStudio: React.FC<PlayerType> = ({
       <div className="player relative`" id="player" ref={player}>
         <video
           className="player_video viewer"
-          src="https://player.vimeo.com/external/194837908.sd.mp4?s=c350076905b78c67f74d7ee39fdb4fef01d12420&profile_id=164"
-          poster="https://fredrickjaxx.is/_assets/video/blossoms.jpg"
+          src={videoSrc}
+          poster={coverImage}
         ></video>
 
         <div className="player_controls ">
