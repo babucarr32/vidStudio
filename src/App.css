@@ -32,6 +32,7 @@ button + button {
 .player_video {
   width: 100%;
   cursor: pointer;
+  object-fit: cover;
 }
 
 .fa {
