@@ -128,9 +128,9 @@ const VolumeMuteIcon: React.FC<IconType> = ({ className, height, width }) => {
       <path
         d="M416 432L64 80"
         stroke="white"
-        stroke-width="32"
-        stroke-miterlimit="10"
-        stroke-linecap="round"
+        strokeWidth="32"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
         className={cn('hover:fill-[#1E90FF]', className)}
       />
       <path
@@ -154,9 +154,9 @@ const FullScreenIcon: React.FC<IconType> = ({ className, height, width }) => {
       <path
         d="M3 7V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H7 M17 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V7 M21 17V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H17 M7 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V17 M16 8H8C7.44772 8 7 8.44772 7 9V15C7 15.5523 7.44772 16 8 16H16C16.5523 16 17 15.5523 17 15V9C17 8.44772 16.5523 8 16 8Z"
         stroke="white"
-        stroke-width="1.75"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         className={cn('hover:stroke-[#1E90FF]', className)}
       />
     </svg>
@@ -171,18 +171,18 @@ const PlayCircleIcon: React.FC<IconType> = ({ className, height, width }) => {
       viewBox="0 0 512 512"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={cn('hover:fill-blue-500', className)}
     >
       <path
         d="M448 256C448 150 362 64 256 64C150 64 64 150 64 256C64 362 150 448 256 448C362 448 448 362 448 256Z"
         stroke="white"
-        stroke-width="32"
-        stroke-miterlimit="10"
+        strokeWidth="32"
+        strokeMiterlimit="10"
       />
       <path
-        d="M216.32 334.44L330.77 265.3C332.365 264.328 333.684 262.962 334.599 261.333C335.514 259.705 335.994 257.868 335.994 256C335.994 254.132 335.514 252.295 334.599 250.667C333.684 249.038 332.365 247.672 330.77 246.7L216.32 177.56C214.68 176.577 212.807 176.048 210.895 176.028C208.983 176.008 207.099 176.496 205.438 177.444C203.777 178.391 202.398 179.764 201.442 181.42C200.487 183.077 199.989 184.958 200 186.87V325.13C199.989 327.042 200.487 328.923 201.442 330.58C202.398 332.236 203.777 333.609 205.438 334.556C207.099 335.504 208.983 335.992 210.895 335.972C212.807 335.952 214.68 335.423 216.32 334.44Z"
         fill="white"
-        className="hover:fill-gray-500"
+        d="M216.32 334.44L330.77 265.3C332.365 264.328 333.684 262.962 334.599 261.333C335.514 259.705 335.994 257.868 335.994 256C335.994 254.132 335.514 252.295 334.599 250.667C333.684 249.038 332.365 247.672 330.77 246.7L216.32 177.56C214.68 176.577 212.807 176.048 210.895 176.028C208.983 176.008 207.099 176.496 205.438 177.444C203.777 178.391 202.398 179.764 201.442 181.42C200.487 183.077 199.989 184.958 200 186.87V325.13C199.989 327.042 200.487 328.923 201.442 330.58C202.398 332.236 203.777 333.609 205.438 334.556C207.099 335.504 208.983 335.992 210.895 335.972C212.807 335.952 214.68 335.423 216.32 334.44Z"
+        className=""
       />
     </svg>
   );
@@ -196,7 +196,7 @@ const ExpandIcon: React.FC<IconType> = ({ className, height, width }) => {
       viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         className="hover:fill-gray-500"
-        d="M432 320V432H320M421.8 421.77L304 304M80 192V80H192M90.2 90.23L208 208M320 80H432V192M421.77 90.2L304 208M192 432H80V320M90.23 421.8L208 304" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+        d="M432 320V432H320M421.8 421.77L304 304M80 192V80H192M90.2 90.23L208 208M320 80H432V192M421.77 90.2L304 208M192 432H80V320M90.23 421.8L208 304" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )
 };
