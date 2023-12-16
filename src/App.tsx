@@ -38,9 +38,8 @@ function App() {
   return (
     <VidPlayer
       videoSrc="https://player.vimeo.com/external/194837908.sd.mp4?s=c350076905b78c67f74d7ee39fdb4fef01d12420&profile_id=164"
-      // coverImage="https://fredrickjaxx.is/_assets/video/blossoms.jpg"
+      // coverImage="https://images.unsplash.com/photo-1702234867439-bec43ed4e369?q=80&w=2072&auto=format&fit=crop"
       coverImage="/img1.png"
-
       // playInitialIcon={<VolumeMuteIcon width={40} height={40}/>}
       // pauseIcon={<VolumeMuteIcon width={40} height={40}/>}
       // volumeIcon={<VolumeMuteIcon width={40} height={40}/>}
