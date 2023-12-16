@@ -29,7 +29,7 @@ export default {
 ```
 
 Visit https://github.com/babucarr32/vidStudio/blob/main/src/App.css copy the css and add it to your `index.css` file.
-It should look similar to like the following.
+It should look similar to the following.
 ```
 @tailwind base;
 @tailwind components;
