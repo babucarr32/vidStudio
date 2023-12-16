@@ -2,42 +2,64 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect, useRef, useState } from 'react';
+
+import cn from 'classnames';
+
 import {
-  ExpandIcon,
-  PauseIcon,
-  PlayBackIcon,
-  PlayCircleIcon,
-  PlayForwardIcon,
   PlayIcon,
   StopIcon,
+  PauseIcon,
   VolumeIcon,
+  ExpandIcon,
+  PlayBackIcon,
   VolumeMuteIcon,
+  PlayCircleIcon,
+  PlayForwardIcon,
 } from '../Icons';
 
 import '../../App.css';
 
-interface PlayerType {
-  playInitialIcon?: any;
-  volumeMuteIcon?:  any;
-  volumeIcon?:  any;
-  playBackIcon?:  any;
-  playForwardIcon?:  any;
-  playIcon?:  any;
-  pauseIcon?:  any;
-  coverImage?: string;
+interface PlayerType extends React.VideoHTMLAttributes<HTMLVideoElement> {
+  playIcon?: any;
+  pauseIcon?: any;
   videoSrc: string;
+  volumeIcon?: any;
+  expandIcon?: any;
+  playBackIcon?: any;
+  coverImage?: string;
+  volumeMuteIcon?: any;
+  playInitialIcon?: any;
+  playForwardIcon?: any;
+  defaultPlayIconClassName?: any;
+  defaultPauseIconClassName?: any;
+  defaultExpandIconClassName?: any;
+  defaultVolumeIconClassName?: any;
+  defaultPlayBackIconClassName?: any;
+  defaultVolumeMuteIconClassName?: any;
+  defaultPlayInitialIconClassName?: any;
+  defaultPlayForwardIconClassName?: any;
 }
 
-const VidStudio: React.FC<PlayerType> = ({ 
-  pauseIcon, 
-  volumeIcon,
-  playBackIcon, 
-  volumeMuteIcon, 
-  playForwardIcon, 
-  playInitialIcon, 
+const VidStudio: React.FC<PlayerType> = ({
   playIcon,
   videoSrc,
-  coverImage
+  pauseIcon,
+  coverImage,
+  volumeIcon,
+  expandIcon,
+  playBackIcon,
+  volumeMuteIcon,
+  playForwardIcon,
+  playInitialIcon,
+  defaultPlayIconClassName,
+  defaultPauseIconClassName,
+  defaultExpandIconClassName,
+  defaultVolumeIconClassName,
+  defaultPlayBackIconClassName,
+  defaultVolumeMuteIconClassName,
+  defaultPlayInitialIconClassName,
+  defaultPlayForwardIconClassName,
+  ...props
 }) => {
   const player = useRef<HTMLDivElement | any>();
   // const playBtn = useRef<HTMLButtonElement | any>();
@@ -46,20 +68,20 @@ const VidStudio: React.FC<PlayerType> = ({
   const progressRange = useRef<HTMLDivElement | any>();
   const duration = useRef<HTMLInputElement | any>();
 
-  const [video, setVideo] = useState<HTMLVideoElement>();
-  const [screenSize, setScreenSize] = useState<HTMLButtonElement>();
-  const [speaker, setSpeaker] = useState<HTMLButtonElement>();
-  const [speakerIcon, setSpeakerIcon] = useState<HTMLButtonElement>();
-  const [stopBtn, setStopBtn] = useState<HTMLButtonElement>();
-  const [controls, setControls] = useState<HTMLDivElement>();
-  const [screenSize_icon, setScreenSize_icon] = useState<HTMLImageElement>();
-  const [volInput, setVolInput] = useState<any>();
   const [ranges, setRanges] = useState<any>();
   const [volume, setVolume] = useState<any>();
+  const [volInput, setVolInput] = useState<any>();
   const [skipButtons, setSkipButtons] = useState<any>();
-  const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false);
-  const [isInitialPlay, setIsInitialPlay] = useState<boolean>(false);
+  const [video, setVideo] = useState<HTMLVideoElement>();
+  const [controls, setControls] = useState<HTMLDivElement>();
+  const [speaker, setSpeaker] = useState<HTMLButtonElement>();
+  const [stopBtn, setStopBtn] = useState<HTMLButtonElement>();
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
+  const [screenSize, setScreenSize] = useState<HTMLButtonElement>();
+  const [isInitialPlay, setIsInitialPlay] = useState<boolean>(false);
+  const [speakerIcon, setSpeakerIcon] = useState<HTMLButtonElement>();
+  const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false);
+  const [screenSize_icon, setScreenSize_icon] = useState<HTMLImageElement>();
 
   useEffect(() => {
     const handleSetVideo = () => {
@@ -362,29 +384,27 @@ const VidStudio: React.FC<PlayerType> = ({
         onClick={togglePlay}
         onKeyDown={(event) => event.keyCode === 32 && togglePlay()}
       >
-        {
-          !isInitialPlay && (
-            playInitialIcon ? playInitialIcon : 
-              <PlayCircleIcon
-                height={100}
-                width={100}
-              />
-          )
-        }
+        {!isInitialPlay &&
+          (playInitialIcon ? (
+            playInitialIcon
+          ) : (
+            <PlayCircleIcon className={defaultPlayInitialIconClassName} height={100} width={100} />
+          ))}
       </button>
       <div className="player relative`" id="player" ref={player}>
         <video
-          className="player_video viewer"
+          {...props}
           src={videoSrc}
           poster={coverImage}
+          className="player_video viewer"
         ></video>
 
-        <div className="player_controls ">
+        <div className={cn('player_controls', !isInitialPlay? 'hidden': 'block')}>
           <div
-            onClick={setProgress}
-            ref={progressRange}
-            className="progress-range"
             title="Jump-to"
+            ref={progressRange}
+            onClick={setProgress}
+            className="progress-range"
           >
             <div ref={progressBar} className="progress-bar"></div>
           </div>
@@ -393,41 +413,57 @@ const VidStudio: React.FC<PlayerType> = ({
             <div className="flex items-center gap-[16px] w-[30%] justify-start">
               <button className="player_button speaker">
                 <i id="speaker_icon" aria-hidden="true">
-                  {isAudioMuted ? (volumeMuteIcon ? volumeMuteIcon : <VolumeMuteIcon />) : (volumeIcon ? volumeIcon : <VolumeIcon />)}
+                  {isAudioMuted ? (
+                    volumeMuteIcon ? (
+                      volumeMuteIcon
+                    ) : (
+                      <VolumeMuteIcon className={defaultVolumeMuteIconClassName}/>
+                    )
+                  ) : volumeIcon ? (
+                    volumeIcon
+                  ) : (
+                    <VolumeIcon className={defaultVolumeIconClassName} />
+                  )}
                 </i>
               </button>
               <input
-                type="range"
-                name="volume"
-                className="player_slider"
                 min="0"
                 max="1"
                 step="0.05"
+                type="range"
+                name="volume"
                 value={volume}
+                className="player_slider"
                 onChange={(e) => setVolume(e.target.value)}
               ></input>
             </div>
 
             <div className="flex items-center gap-[8px] w-[30%] justify-center">
               <button data-skip="-10" className="player_button">
-                {playBackIcon ? playBackIcon : <PlayBackIcon />}
+                {playBackIcon ? playBackIcon : <PlayBackIcon className={defaultPlayBackIconClassName}/>}
               </button>
 
               <button
-                className="player_button toggle"
                 title="Toggle Play"
                 onClick={togglePlay}
+                className="player_button toggle"
                 onKeyDown={(event) => event.keyCode === 32 && togglePlay()}
               >
                 {isVideoPlaying ? (
-                  pauseIcon ? pauseIcon : <PauseIcon />
+                  pauseIcon ? (
+                    pauseIcon
+                  ) : (
+                    <PauseIcon className={defaultPauseIconClassName}/>
+                  )
+                ) : playIcon ? (
+                  playIcon
                 ) : (
-                  playIcon ? playIcon : <PlayCircleIcon height={50} width={50} />
+                  <PlayCircleIcon height={50} width={50} className={defaultPlayInitialIconClassName}/>
                 )}
               </button>
 
               <button data-skip="10" className="player_button">
-                {playForwardIcon ? playForwardIcon : <PlayForwardIcon />}
+                {playForwardIcon ? playForwardIcon : <PlayForwardIcon className={defaultPlayForwardIconClassName}/>}
               </button>
             </div>
             <div className="flex items-center w-[30%] justify-end">
@@ -440,7 +476,10 @@ const VidStudio: React.FC<PlayerType> = ({
                 </span>
               </div>
               <button className="player_button screenSize hidden sm:block">
-                <ExpandIcon />
+                {
+                  expandIcon ? expandIcon :
+                    <ExpandIcon className={defaultExpandIconClassName}/>
+                }
               </button>
             </div>
           </div>
@@ -448,6 +487,6 @@ const VidStudio: React.FC<PlayerType> = ({
       </div>
     </div>
   );
-}
+};
 
 export default VidStudio;
