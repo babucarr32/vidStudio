@@ -20,24 +20,24 @@ import {
 import '../../App.css';
 
 interface PlayerType extends React.VideoHTMLAttributes<HTMLVideoElement> {
-  playIcon?: any;
-  pauseIcon?: any;
   videoSrc: string;
-  volumeIcon?: any;
-  expandIcon?: any;
-  playBackIcon?: any;
   coverImage?: string;
-  volumeMuteIcon?: any;
-  playInitialIcon?: any;
-  playForwardIcon?: any;
-  defaultPlayIconClassName?: any;
-  defaultPauseIconClassName?: any;
-  defaultExpandIconClassName?: any;
-  defaultVolumeIconClassName?: any;
-  defaultPlayBackIconClassName?: any;
-  defaultVolumeMuteIconClassName?: any;
-  defaultPlayInitialIconClassName?: any;
-  defaultPlayForwardIconClassName?: any;
+  playIcon?: React.ReactNode;
+  pauseIcon?: React.ReactNode;
+  volumeIcon?: React.ReactNode;
+  expandIcon?: React.ReactNode;
+  playBackIcon?: React.ReactNode;
+  volumeMuteIcon?: React.ReactNode;
+  defaultPlayIconClassName?: string;
+  playForwardIcon?: React.ReactNode;
+  playInitialIcon?: React.ReactNode;
+  defaultPauseIconClassName?: string;
+  defaultExpandIconClassName?: string;
+  defaultVolumeIconClassName?: string;
+  defaultPlayBackIconClassName?: string;
+  defaultVolumeMuteIconClassName?: string;
+  defaultPlayInitialIconClassName?: string;
+  defaultPlayForwardIconClassName?: string;
 }
 
 const VidStudio: React.FC<PlayerType> = ({
