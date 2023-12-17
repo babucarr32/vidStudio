@@ -62,22 +62,17 @@ const VidStudio: React.FC<PlayerType> = ({
   ...props
 }) => {
   const player = useRef<HTMLDivElement | any>();
-  // const playBtn = useRef<HTMLButtonElement | any>();
   const progressBar = useRef<HTMLInputElement | any>();
   const currentTime = useRef<HTMLInputElement | any>();
   const progressRange = useRef<HTMLDivElement | any>();
   const duration = useRef<HTMLInputElement | any>();
 
-  const [ranges, setRanges] = useState<any>();
   const [volume, setVolume] = useState<any>();
   const [volInput, setVolInput] = useState<any>();
-  const [skipButtons, setSkipButtons] = useState<any>();
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const [video, setVideo] = useState<HTMLVideoElement>();
   const [controls, setControls] = useState<HTMLDivElement>();
-  const [speaker, setSpeaker] = useState<HTMLButtonElement>();
-  const [stopBtn, setStopBtn] = useState<HTMLButtonElement>();
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
-  const [screenSize, setScreenSize] = useState<HTMLButtonElement>();
   const [isInitialPlay, setIsInitialPlay] = useState<boolean>(false);
   const [speakerIcon, setSpeakerIcon] = useState<HTMLButtonElement>();
   const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false);
@@ -96,35 +91,11 @@ const VidStudio: React.FC<PlayerType> = ({
     };
     handleSetControls();
 
-    const handleSetScreenSize = () => {
-      const result = player.current?.querySelector('.screenSize');
-      setScreenSize(result as any);
-    };
-    handleSetScreenSize();
-
     const handleSetVolume = () => {
       const result = player.current?.querySelector('input[name="volume"]');
       setVolInput(result as any);
     };
     handleSetVolume();
-
-    const handleSetSkipBtns = () => {
-      const result = player.current?.querySelectorAll('[data-skip]');
-      setSkipButtons(result as any);
-    };
-    handleSetSkipBtns();
-
-    const handleSetStopBtn = () => {
-      const result = player.current?.querySelector('.stop');
-      setStopBtn(result as any);
-    };
-    handleSetStopBtn();
-
-    const handleSetRanges = () => {
-      const result = player.current?.querySelectorAll('.player_slider');
-      setRanges(result as any);
-    };
-    handleSetRanges();
 
     const handleSpeakerIcon = () => {
       const result = player.current?.querySelector('#speaker_icon');
@@ -132,82 +103,11 @@ const VidStudio: React.FC<PlayerType> = ({
     };
     handleSpeakerIcon();
 
-    const handleSpeaker = () => {
-      const result = player.current?.querySelector('.speaker');
-      setSpeaker(result as any);
-    };
-    handleSpeaker();
-
     const handleSetScreenSizeIcon = () => {
       const result = player.current.querySelector('#screenSize_icon');
       setScreenSize_icon(result as any);
     };
     handleSetScreenSizeIcon();
-
-    const handleAddVideoListener = () => {
-      video?.addEventListener('timeupdate', updateProgress);
-      video?.addEventListener('canplay', updateProgress);
-      video?.addEventListener('timeupdate', updateProgress);
-      video?.addEventListener('canplay', updateProgress);
-    };
-    handleAddVideoListener();
-
-    const handleAddScreenSizeListener = () => {
-      screenSize?.addEventListener('click', changeScreenSize);
-    };
-    handleAddScreenSizeListener();
-
-    const handleAddSpeakerListener = () => {
-      speaker?.addEventListener('click', mute);
-    };
-    handleAddSpeakerListener();
-
-    const handleAddStopBtnListener = () => {
-      stopBtn?.addEventListener('click', stopVideo);
-    };
-    handleAddStopBtnListener();
-
-    const handleAddSkipBtnsListener = () => {
-      skipButtons?.forEach((button: any) =>
-        button.addEventListener('click', skip)
-      );
-    };
-    handleAddSkipBtnsListener();
-
-    const handleAddRangesListener = () => {
-      // volume
-      ranges?.forEach((range: any) =>
-        range.addEventListener('change', handleRangeUpdate)
-      );
-      ranges?.forEach((range: any) =>
-        range.addEventListener('mousemove', handleRangeUpdate)
-      );
-    };
-    handleAddRangesListener();
-
-    const handleAddScreenSizProgressRangeListener = () => {
-      screenSize?.addEventListener('click', changeScreenSize);
-    };
-    handleAddScreenSizProgressRangeListener();
-
-    const handleAddProgressRangeListener = () => {
-      let mouseDown = false;
-      progressRange.current.addEventListener('click', scrub);
-      progressRange.current.addEventListener('click', setProgress);
-      progressRange.current.addEventListener(
-        'mousemove',
-        (event: any) => mouseDown && scrub(event)
-      );
-      progressRange.current.addEventListener(
-        'mousedown',
-        () => (mouseDown = true)
-      );
-      progressRange.current.addEventListener(
-        'mouseup',
-        () => (mouseDown = false)
-      );
-    };
-    handleAddProgressRangeListener();
 
     document.body.onkeyup = function (e) {
       if (e.keyCode == 32) {
@@ -218,10 +118,13 @@ const VidStudio: React.FC<PlayerType> = ({
 
   let muted = false;
 
-  // not sure, is this for FF and REW?
-  function skip(this: any) {
+  function skip(type: 'add' | 'reduce') {
+    const skipNumber = {
+      add: 10,
+      reduce: -10
+    }
     if (video) {
-      video.currentTime += +this.dataset.skip;
+      video.currentTime += +skipNumber[type];
     }
   }
 
@@ -230,7 +133,6 @@ const VidStudio: React.FC<PlayerType> = ({
       if (!muted) {
         video['volume'] = 0;
         volInput.value = 0;
-        // speakerIcon.className = "fa fa-volume-off";
         setIsAudioMuted(true);
         muted = true;
       } else {
@@ -238,8 +140,6 @@ const VidStudio: React.FC<PlayerType> = ({
         volInput.value = 1;
         muted = false;
         setIsAudioMuted(false);
-
-        // speakerIcon.className = "fa fa-volume-up";
       }
     }
   }
@@ -261,15 +161,11 @@ const VidStudio: React.FC<PlayerType> = ({
     return `${minutes}:${seconds}`;
   }
 
-  // function showPlayIcon() {
-  //   playBtn.current.classList.replace("fa-pause", "fa-play");
-  //   playBtn.current.setAttribute("title", "Play");
-  // }
-
-  // Click to seek within the video
   function setProgress(e: any) {
     if (video) {
-      const newTime = e.offsetX / progressRange.current.offsetWidth;
+      const rect = progressRange.current.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const newTime = offsetX / progressRange.current.offsetWidth;
       progressBar.current.style.width = `${newTime * 100}%`;
       video.currentTime = newTime * video.duration;
     }
@@ -284,9 +180,9 @@ const VidStudio: React.FC<PlayerType> = ({
   }
 
   // volume functions
-  function handleRangeUpdate(this: HTMLInputElement) {
+  function handleRangeUpdate(e: any) {
     if (video && speakerIcon) {
-      (video as any)[this.name] = this.value;
+      (video as any)[e.target.name] = e.target.value;
 
       if (video.volume === 0) {
         // speakerIcon.className = "fa fa-volume-off";
@@ -309,9 +205,6 @@ const VidStudio: React.FC<PlayerType> = ({
     if (controls && screenSize_icon) {
       if (player.current.mozRequestFullScreen) {
         player.current.mozRequestFullScreen();
-        //change icon
-        screenSize_icon.className = 'fa fa-compress';
-        /*control panel once fullscreen*/
         video?.addEventListener(
           'mouseout',
           () => (controls.style.transform = 'translateY(100%) translateX(-5px)')
@@ -365,13 +258,10 @@ const VidStudio: React.FC<PlayerType> = ({
     if (video) {
       if (video.paused) {
         video.play();
-        // playBtn.current.classList.replace("fa-play", "fa-pause");
-        // playBtn.current.setAttribute("title", "Pause");
         setIsInitialPlay(true);
         setIsVideoPlaying(true);
       } else {
         video.pause();
-        // showPlayIcon();
         setIsVideoPlaying(false);
       }
     }
@@ -397,13 +287,19 @@ const VidStudio: React.FC<PlayerType> = ({
           src={videoSrc}
           poster={coverImage}
           className="player_video viewer"
+          onTimeUpdate={updateProgress}
+          onCanPlay={updateProgress}
+          onTimeUpdateCapture={updateProgress}
         ></video>
 
         <div className={cn('player_controls', !isInitialPlay? 'hidden': 'block')}>
           <div
             title="Jump-to"
             ref={progressRange}
-            onClick={setProgress}
+            onClick={(e) => {setProgress(e); scrub(e)}}
+            onMouseMove={(e) => isMouseDown && scrub(e)}
+            onMouseDown={() => setIsMouseDown(true)}
+            onMouseUp={() => setIsMouseDown(false)}
             className="progress-range"
           >
             <div ref={progressBar} className="progress-bar"></div>
@@ -411,7 +307,7 @@ const VidStudio: React.FC<PlayerType> = ({
 
           <div className="right-controls flex items-center justify-between md:p-[8px] lg:p-[12px] xl:p-[16px]">
             <div className="flex items-center gap-[16px] w-[30%] justify-start">
-              <button className="player_button speaker">
+              <button onClick={()=> mute()} className="player_button speaker">
                 <i id="speaker_icon" aria-hidden="true">
                   {isAudioMuted ? (
                     volumeMuteIcon ? (
@@ -434,12 +330,13 @@ const VidStudio: React.FC<PlayerType> = ({
                 name="volume"
                 value={volume}
                 className="player_slider"
-                onChange={(e) => setVolume(e.target.value)}
+                onChange={(e) => {setVolume(e.target.value); handleRangeUpdate(e)}}
+                onMouseMove={(e)=> handleRangeUpdate(e)}
               ></input>
             </div>
 
             <div className="flex items-center gap-[8px] w-[30%] justify-center">
-              <button data-skip="-10" className="player_button">
+              <button onClick={() => skip('reduce')} className="player_button">
                 {playBackIcon ? playBackIcon : <PlayBackIcon className={defaultPlayBackIconClassName}/>}
               </button>
 
@@ -462,7 +359,7 @@ const VidStudio: React.FC<PlayerType> = ({
                 )}
               </button>
 
-              <button data-skip="10" className="player_button">
+              <button onClick={() => skip('add')} className="player_button">
                 {playForwardIcon ? playForwardIcon : <PlayForwardIcon className={defaultPlayForwardIconClassName}/>}
               </button>
             </div>
@@ -475,7 +372,7 @@ const VidStudio: React.FC<PlayerType> = ({
                   2:38
                 </span>
               </div>
-              <button className="player_button screenSize hidden sm:block">
+              <button onClick={()=>changeScreenSize()} className="player_button screenSize hidden sm:block">
                 {
                   expandIcon ? expandIcon :
                     <ExpandIcon className={defaultExpandIconClassName}/>
